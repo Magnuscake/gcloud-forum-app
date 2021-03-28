@@ -1,19 +1,33 @@
 {% extends 'base.html' %}
 {% block title %} Home {% endblock %}
 {% block content %}
-<form method="POST">
-	<div class="field">
-		<label class="label">Name</label>
-		<div class="control">
-			<input class="input" type="text" placeholder="e.g Alex Smith">
-		</div>
-	</div>
+<form class="mt-4" method="POST">
+  <div class="field">
+    <label class="label">Name</label>
+    <div class="control">
+      <input
+        class="input"
+        type="text"
+        id="userId"
+        name="userId"
+        placeholder="e.g s3134353"
+      >
+    </div>
+  </div>
 
-	<div class="field">
-		<label class="label">Email</label>
-		<div class="control">
-			<input class="input" type="email" placeholder="e.g. alexsmith@gmail.com">
-		</div>
-	</div>
+  <div class="field">
+    <label class="label">Password</label>
+    <div class="control">
+      <input class="input" type="password" id="password" name="password" />
+    </div>
+  </div>
+
+  <div class="field">
+    <p class="control">
+    <button class="button is-success">
+      Login
+    </button>
+    </p>
+  </div>
 </form>
 {% endblock %}

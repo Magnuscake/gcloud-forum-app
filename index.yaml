@@ -1,0 +1,8 @@
+indexes:
+
+- kind: User
+  properties:
+    - name: id
+      direction: asc
+    - name: password
+    - name: user_name
