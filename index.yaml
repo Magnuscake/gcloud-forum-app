@@ -6,3 +6,8 @@ indexes:
       direction: asc
     - name: password
     - name: user_name
+
+- kind: User
+  properties:
+    - name: id
+    - name: password
