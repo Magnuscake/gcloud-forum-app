@@ -9,4 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   );
+  document.querySelectorAll('.button').forEach(btn =>
+    btn.addEventListener('click', () => {
+      btn.classList.add('is-loading');
+    })
+  );
 });

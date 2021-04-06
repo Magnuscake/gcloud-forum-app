@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+{% for message in messages %}
+
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">
+      {{ message['subject'] }}
+    </p>
+  </header>
+  <div class="card-content">
+    <div class="content">
+      {{ message['message_text'] }}
+    </div>
+  </div>
+  <footer class="card-footer">
+    <p class="card-footer-item">
+      Posted by {{ message['created_by'] }} on {{ message['posted_on_formatted'] }}
+    </p>
+  </footer>
+</div>
+
+{% endfor %}
+{% endblock %}

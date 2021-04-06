@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
-{% block title %} Home {% endblock %}
 {% block content %}
-  This is the homepage
+<figure class="image is-128x128">
+  <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
+</figure>
+<a href="/user-page">
+  <h2 class="is-size-3">Welcome back, {{ username }}</h2>
+</a>
 {% endblock %}

@@ -3,11 +3,25 @@ indexes:
 - kind: User
   properties:
     - name: id
-      direction: asc
     - name: password
     - name: user_name
 
-- kind: User
+# For displaying all messages
+- kind: Message
   properties:
-    - name: id
-    - name: password
+  - name: posted_on
+    direction: desc
+  - name: created_by
+  - name: message_text
+  - name: posted_on_formatted
+  - name: subject
+
+# FOr displaying specific messages from a user
+- kind: Message
+  ancestor: yes
+  properties:
+  - name: posted_on
+    direction: desc
+  - name: message_text
+  - name: posted_on_formatted
+  - name: subject

@@ -1,43 +1,54 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
-
+from flask import (
+    Blueprint, render_template, request, redirect, url_for, flash, session
+)
 from .datastore import user_exists_login, create_new_user, property_is_unique
 
 auth = Blueprint('auth', __name__)
 
-@auth.route("/login", methods=["GET", "POST"])
+nav = [
+    {'name': "Login", 'url': "/login"},
+    {'name': "Sign up", 'url': "signup"}
+]
+
+@auth.route("/login", methods=['GET', 'POST'])
 def login():
-    if request.method == "POST":
+    if request.method == 'POST':
         data = request.form
 
-        user_id = data.get("userId")
-        password = data.get("password")
+        user_id = data.get('userId')
+        password = data.get('password')
 
-        found_user = user_exists_login(user_id, password)
+        found_user, key = user_exists_login(user_id, password)
 
         if found_user:
-            flash("Login successful", category="success")
+            flash("Login successful", category='success')
+            # Save username to cookies for easier access
+            session['username'] = found_user
+            session['userId'] = user_id
+            session['key'] = key
             return redirect(url_for('views.home'))
+
         else:
-            flash("ID or password is invalid", category="error")
+            flash("ID or password is invalid", category='error')
 
-
-    return render_template("login.html")
+    return render_template('login.html', nav=nav, title="Login")
 
 # TODO: Uploading image functionality
-@auth.route("/signup", methods=["GET", "POST"])
+@auth.route("/signup", methods=['GET', 'POST'])
 def signup():
-    if request.method == "POST":
+    if request.method == 'POST':
         data = request.form
 
-        user_id = data.get("userId")
-        username = data.get("username")
-        password1 = data.get("password1")
-        password2 = data.get("password2")
+        user_id = data.get('userId')
+        username = data.get('username')
+        password1 = data.get('password1')
+        password2 = data.get('password2')
 
         if (user_id and len(user_id) < 2):
-            flash("Please enter a valid user ID", category="error")
+            flash('Please enter a valid user ID', category='error')
         elif (username and len(username) < 3):
-            flash("Please enter a valid username", category="error")
+            flash('Please enter a valid username', category='error')
+
         # Uniquness checks
         elif (property_is_unique('id', user_id)):
             flash("This ID already exists", category="error")
@@ -45,10 +56,14 @@ def signup():
               flash("This username already exists", category="error")
 
         elif (password1 != password2):
-            flash("Passwords do not match", category="error")
+            flash("Passwords do not match", category='error')
         else:
             create_new_user(user_id, username, password1)
             flash("Account has been successfully been created")
             return redirect(url_for('auth.login'))
 
-    return render_template("signup.html")
+    return render_template('signup.html', nav=nav, title="Sign Up")
+
+@auth.route("/logout")
+def logout():
+    return render_template('login.html')
