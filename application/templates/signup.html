@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<form method="POST">
+<form method="POST" action="/signup" enctype="multipart/form-data">
   <div class="field">
     <label class="label">Enter a user ID</label>
     <div class="control">
@@ -36,8 +36,30 @@
   <div class="field">
     <label class="label">Confirm your password</label>
     <div class="control">
-      <input class="input" type="password" id="password2" name="password2" />
+      <input
+        class="input"
+        type="password"
+        id="password2"
+        name="password2"
+      />
     </div>
+  </div>
+
+  <div class="file is-info has-name mb-4">
+    <label class="file-label">
+      <input class="file-input" type="file" name="image">
+      <span class="file-cta">
+        <!-- <span class="file-icon">
+          <i class="fas fa-upload"></i>
+        </span> -->
+        <span class="file-label">
+          upload file
+        </span>
+      </span>
+      <span class="file-name">
+        Screen Shot 2017-07-29 at 15.54.25.png
+      </span>
+    </label>
   </div>
 
   <div class="field">

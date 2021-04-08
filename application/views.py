@@ -1,4 +1,8 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, session
+from functools import wraps
+
+from flask import (
+    Blueprint, render_template, redirect, url_for, request, flash, session
+)
 
 from .datastore import create_new_message, get_all_messages, get_user_messages, update_password
 
@@ -10,20 +14,35 @@ nav =[
     {'name': "Logout", 'url': "/logout"},
 ]
 
+# Decorators
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return f(*args, **kwargs)
+        else:
+            return redirect('/')
+
+    return wrap
+
+# Routes
 @views.route('/')
 def redirect_to_login():
     return redirect(url_for('auth.login'))
 
 @views.route('/forum')
+@login_required
 def home():
     return render_template('home.html', username=session['username'], nav=nav, title="Welcome to the forum")
 
 @views.route('/messages')
+@login_required
 def messages():
     messages = get_all_messages()
     return render_template('messages.html', messages=messages, nav=nav, title="View Messages")
 
 @views.route('/new-message', methods=['GET', 'POST'])
+@login_required
 def new_message():
     if request.method == 'POST':
         data = request.form
