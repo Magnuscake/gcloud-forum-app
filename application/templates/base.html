@@ -5,15 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
 
+    <!-- custom css -->
+    <link rel="stylesheet" href="../static/styles.css" type="text/css">
+nav =[
+    {'name': "View Messages", 'url': "/messages"},
+    {'name': "New Message", 'url': "/new-message"},
+    {'name': "Logout", 'url': "/logout"},
+]
+
     <title>{{ title }}</title>
   </head>
   <body>
     <nav class="navbar is-info">
       <div class="navbar-menu">
         <div class="navbar-start">
-          {% for link in nav %}
-          <a class="navbar-item" href={{ link.url }}>{{ link.name }}</a>
-          {% endfor %}
+          {% if session['logged_in'] %}
+          <a class="navbar-item" href="/messages">View Messages</a>
+          <a class="navbar-item" href="/new-message">New Message</a>
+          <a class="navbar-item" href="/logout">Logout</a>
+          {% else %}
+          <a class="navbar-item" href="/login">Login</a>
+          <a class="navbar-item" href="/signup">Sign Up</a>
+          {% endif %}
         </div>
       </div>
     </nav>

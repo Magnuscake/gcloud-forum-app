@@ -19,18 +19,15 @@ def user_exists_login(user_id, password):
 def property_is_unique(property, user_input):
     user_query = datastore_client.query(kind='User')
 
-    try:
-        user_query.projection = [property]
+    user_query.projection = [property]
 
-        if (user_query.fetch()):
-            for user in user_query.fetch():
-                if user[property] == user_input:
-                    return True
-    except:
-        print("This property does not exist")
+    for user in user_query.fetch():
+        print(f"{user[property]} == {user_input}")
+        print(user[property] == user_input)
+        if user[property] == user_input:
+            return True
 
-    finally:
-        return False
+    return False
 
 
 def create_new_user(user_id, username, password):
@@ -47,7 +44,7 @@ def create_new_user(user_id, username, password):
 
 # TODO: Ancestor entities with id for key
 # https://cloud.google.com/datastore/docs/concepts/entities#ancestor_paths
-def create_new_message(subject, message_text, created_by, user_key):
+def create_new_message(subject, message_text, created_by, user_key, img_url):
     with datastore_client.transaction():
         message = datastore.Entity(datastore_client.key('User', user_key, 'Message'))
 
@@ -59,7 +56,8 @@ def create_new_message(subject, message_text, created_by, user_key):
                 'subject': subject,
                 'message_text': message_text,
                 'posted_on': datetime.utcnow(),
-                'posted_on_formatted': now.strftime("%d/%m/%y, %I:%M %p")
+                'posted_on_formatted': now.strftime("%d/%m/%y, %I:%M %p"),
+                'img_url': img_url
             }
         )
 
@@ -68,7 +66,7 @@ def create_new_message(subject, message_text, created_by, user_key):
 def get_all_messages():
     message_query = datastore_client.query(kind='Message')
     message_query.order = ['-posted_on']
-    message_query.projection = ['subject', 'message_text', 'posted_on_formatted', 'created_by']
+    message_query.projection = ['subject', 'message_text', 'posted_on_formatted', 'created_by', 'img_url']
 
     messages = message_query.fetch(limit=10)
 
@@ -79,7 +77,7 @@ def get_user_messages(user_key):
     message_query = datastore_client.query(kind='Message', ancestor=ancestor)
 
     message_query.order = ['-posted_on']
-    message_query.projection = ['subject', 'message_text', 'posted_on_formatted']
+    message_query.projection = ['subject', 'message_text', 'posted_on_formatted', 'img_url']
 
     messages = message_query.fetch()
 

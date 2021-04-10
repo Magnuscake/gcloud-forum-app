@@ -15,6 +15,7 @@ indexes:
   - name: message_text
   - name: posted_on_formatted
   - name: subject
+  - name: img_url
 
 # FOr displaying specific messages from a user
 - kind: Message
@@ -25,3 +26,4 @@ indexes:
   - name: message_text
   - name: posted_on_formatted
   - name: subject
+  - name: img_url

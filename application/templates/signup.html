@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<form method="POST" action="/signup" enctype="multipart/form-data">
+<form method="POST" enctype="multipart/form-data">
   <div class="field">
     <label class="label">Enter a user ID</label>
     <div class="control">
@@ -45,7 +45,7 @@
     </div>
   </div>
 
-  <div class="file is-info has-name mb-4">
+  <div id="file-upload" class="file is-info has-name mb-4">
     <label class="file-label">
       <input class="file-input" type="file" name="image">
       <span class="file-cta">
@@ -53,11 +53,11 @@
           <i class="fas fa-upload"></i>
         </span> -->
         <span class="file-label">
-          upload file
+          upload image
         </span>
       </span>
       <span class="file-name">
-        Screen Shot 2017-07-29 at 15.54.25.png
+        No image uploaded
       </span>
     </label>
   </div>

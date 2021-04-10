@@ -1,24 +1,31 @@
 {% extends 'base.html' %}
 {% block content %}
-{% for message in messages %}
-
-<div class="card mb-4">
-  <header class="card-header">
-    <p class="card-header-title">
-      {{ message['subject'] }}
-    </p>
-  </header>
-  <div class="card-content">
-    <div class="content">
-      {{ message['message_text'] }}
+<div class="message-list">
+  {% for message in messages %}
+  <div class="card mb-4">
+    {% if message['img_url'] %}
+    <div class="card-image">
+      <figure class="image is-5by3">
+        <img src={{ message.img_url }}>
+      </figure>
     </div>
+    {% endif %}
+    <header class="card-header">
+      <p class="card-header-title">
+        {{ message['subject'] }}
+      </p>
+    </header>
+    <div class="card-content">
+      <div class="content">
+        {{ message['message_text'] }}
+      </div>
+    </div>
+    <footer class="card-footer">
+      <p class="card-footer-item">
+        Posted by {{ message['created_by'] }} on {{ message['posted_on_formatted'] }}
+      </p>
+    </footer>
   </div>
-  <footer class="card-footer">
-    <p class="card-footer-item">
-      Posted by {{ message['created_by'] }} on {{ message['posted_on_formatted'] }}
-    </p>
-  </footer>
-</div>
-
 {% endfor %}
+</div>
 {% endblock %}
