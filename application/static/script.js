@@ -9,14 +9,34 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   );
-  document.querySelectorAll('.button').forEach(btn =>
+
+  document.querySelectorAll('.button :not(.edit-button)').forEach(btn =>
     btn.addEventListener('click', () => {
       btn.classList.add('is-loading');
     })
   );
 
-  const fileInput = document.querySelector('#file-upload input[type=file]');
-  fileInput.onchange = () => {
+  document.querySelectorAll('.edit-button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const msgKey = btn.closest('.card').id;
+      fetch('/user-page', {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        body: JSON.stringify({
+          key: msgKey,
+        }),
+      }).then(function (response) {
+        document.cookies = `message_key=${msgKey}`;
+        return response.text();
+      });
+    });
+  });
+
+  (
+    document.querySelector('#file-upload input[type=file]') || []
+  ).onchange = () => {
     if (fileInput.files.length > 0) {
       const fileName = document.querySelector('#file-upload .file-name');
       fileName.textContent = fileInput.files[0].name;

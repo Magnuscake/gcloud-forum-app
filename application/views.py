@@ -1,14 +1,16 @@
 from functools import wraps
 import string
 import random
-
-from application.cloud_storage import retrive_image, upload_image
+import time
 
 from flask import (
     Blueprint, render_template, redirect, url_for, request, flash, session
 )
 
-from .datastore import create_new_message, get_all_messages, get_user_messages, update_password
+from .datastore import (
+    create_new_message, get_all_messages, get_single_message, get_user_messages, update_password, update_message
+)
+from .cloud_storage import retrive_image, upload_image
 
 views = Blueprint('views', __name__)
 
@@ -29,7 +31,6 @@ def generate_filename():
     random_str = ''.join(random.choice(letters) for i in range(10))
 
     return random_str
-
 
 # Routes
 @views.route('/')
@@ -79,25 +80,70 @@ def new_message():
                 img_url
             )
             flash("Your message has been successfully posted")
+            return redirect(url_for('.messages'))
 
     return render_template('new-message.html', title="Post New Message")
 
 @views.route('/user-page', methods=['GET', 'POST'])
 def user_page():
     if request.method == 'POST':
-        data = request.form
 
-        user_id = session['user_info'].get('userId')
-        old_password = data.get('oldPassword')
-        new_password = data.get('newPassword')
+        if not request.form.get('message-id'):
+            data = request.form
 
-        updated = update_password(user_id, old_password, new_password)
+            user_id = session['user_info']['key']
+            old_password = data.get('oldPassword')
+            new_password = data.get('newPassword')
 
-        if (updated):
-            flash("Password has been successfully changed", category='success')
+            if (not new_password or len(new_password) <= 2):
+                print('here')
+                flash("Please enter a valid new password", category="error")
+            else:
+                updated_is_password = update_password(user_id, old_password, new_password)
+
+                if (updated_is_password):
+                    flash("Password has been successfully changed", category='success')
+                    return redirect(url_for('auth.logout'))
+                else:
+                    flash("Current password does not match", category="error")
+
         else:
-            flash("Current password does not match", category="error")
+            #  message_key = request.get_json()['key']
+            #  message = get_single_message(message_key, session['user_info']['key'])
+            #  print(message_key)
+            #  session['message_info'] = message
+            #  return redirect(url_for('.edit_message'))
+            message_key = request.form.get('message-id')
+            message = get_single_message(message_key, session['user_info']['key'])
+            session['message_info'] = message
+            session['message_info']['key'] = message.key.id
+            return redirect(url_for('.edit_message'))
 
     user_messages = get_user_messages(session['user_info']['key'])
 
     return render_template('user-page.html', messages=user_messages)
+
+@views.route('/edit-message', methods=['GET', 'POST'])
+def edit_message():
+    if request.method == 'POST':
+        data = request.form
+
+        subject = data.get('subject')
+        message_text = data.get('messageText')
+        image = request.files.get('image')
+
+        if not subject:
+            flash("Please enter a subject for you message", category='error')
+
+        update_message(
+            session['message_info']['key'],
+            session['user_info']['key'],
+            session['user_info']['username'],
+            session['message_info']['img_url'],
+            subject,
+            message_text,
+        )
+        flash("Your message has been successfully edited")
+        return redirect(url_for('.user_page'))
+
+    return render_template('edit-message.html', message=session['message_info'])

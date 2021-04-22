@@ -7,7 +7,6 @@ from .cloud_storage import upload_image
 
 auth = Blueprint('auth', __name__)
 
-
 # Routes
 @auth.route("/login", methods=['GET', 'POST'])
 def login():
@@ -65,6 +64,8 @@ def signup():
         elif (property_is_unique('user_name', username)):
               flash("This username already exists", category="error")
 
+        elif (password1 == '' or password2 == ''):
+            flash("Please enter a valid password", category='error')
         elif (password1 != password2):
             flash("Passwords do not match", category='error')
         else:

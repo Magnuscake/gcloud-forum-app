@@ -3,7 +3,7 @@
 <div class="columns is-variable is-8">
   <div class="column is-4">
     <h3 class="is-size-3">Update your password</h3>
-    <form class="mt-4" method="POST">
+    <form class="password-form mt-4" method="POST">
       <div class="field">
         <label class="label">Enter your current password</label>
         <div class="control">
@@ -27,27 +27,37 @@
   </div>
 
   <div class="user-messages column">
-    <h3 class="is-size-3 has-text-right">Recent Messages</h3>
+    <h3 class="is-size-3 has-text-right">Your Recent Messages</h3>
     {% for message in messages %}
-
-    <div class="card mt-4">
-      <header class="card-header">
-        <p class="card-header-title">
-        {{ message['subject'] }}
-        </p>
-      </header>
-      <div class="card-content">
-        <div class="content">
-          {{ message['message_text'] }}
+    <form method="POST">
+      <div id={{ message.key.id }} class="card mt-4">
+        {% if message['img_url'] %}
+        <div class="card-image">
+          <figure class="image is-2by1">
+            <img src={{ message.img_url }}>
+          </figure>
         </div>
-      </div>
-      <footer class="card-footer">
-        <p class="card-footer-item">
-        Posted on {{ message['posted_on_formatted'] }}
-        </p>
-      </footer>
-    </div>
+        {% endif %}
 
+        <header class="card-header is-flex">
+          <p class="card-header-title">
+          {{ message['subject'] }}
+          </p>
+          <button class="edit-button button is-ghost">Edit message</button>
+        </header>
+        <div class="card-content">
+          <div class="content">
+            {{ message['message_text'] }}
+          </div>
+        </div>
+        <footer class="card-footer">
+          <input value={{ message.key.id }} name="message-id" style="display: none" />
+          <p class="card-footer-item">
+          Posted on {{ message['posted_on_formatted'] }}
+          </p>
+        </footer>
+      </div>
+    </form>
     {% endfor %}
   </div>
 </div>

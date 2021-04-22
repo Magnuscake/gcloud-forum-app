@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="message-list">
+  {% if messages %}
   {% for message in messages %}
   <div class="card mb-4">
     {% if message['img_url'] %}
@@ -12,7 +13,7 @@
     {% endif %}
     <header class="card-header">
       <p class="card-header-title">
-        {{ message['subject'] }}
+      {{ message['subject'] }}
       </p>
     </header>
     <div class="card-content">
@@ -22,10 +23,13 @@
     </div>
     <footer class="card-footer">
       <p class="card-footer-item">
-        Posted by {{ message['created_by'] }} on {{ message['posted_on_formatted'] }}
+      Posted by {{ message['created_by'] }} on {{ message['posted_on_formatted'] }}
       </p>
     </footer>
   </div>
-{% endfor %}
+  {% endfor %}
+  {% else %}
+  <p class="is-italic">No messages to display</p>
+  {% endif %}
 </div>
 {% endblock %}
